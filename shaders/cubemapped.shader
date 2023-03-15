@@ -27,13 +27,13 @@ uniform vec3 modelAxisYaw;
 
 vec3 rotateVecAroundVecAx(in vec3 vec, in vec3 vecAx, in float theta) {
 
-	vec3 ap = (dot(vec,vecAx) / dot(vecAx,vecAx)) * vecAx;
+	vec3 ap = (dot(vec, vecAx) / dot(vecAx, vecAx)) * vecAx;
 	vec3 ao = vec - ap;
 
 	vec3 orth = cross(vecAx, ao);
 
-	float x1 = cos(theta)/(length(ao));
-	float x2 = sin(theta)/(length(orth));
+	float x1 = cos(theta) / (length(ao));
+	float x2 = sin(theta) / (length(orth));
 
 
 	vec3 aor = length(ao) * (x1 * ao + x2 * orth);
@@ -43,7 +43,7 @@ vec3 rotateVecAroundVecAx(in vec3 vec, in vec3 vecAx, in float theta) {
 	if (length(ao) == 0) {
 		a = vec;
 	}
-	
+
 	return a;
 }
 
@@ -98,9 +98,9 @@ void main() {
 
 
 	//rotation code x y z plane
-	
 
-	
+
+
 
 	mat3 rotationCamera = getRotationMatrix(cameraRotation);
 
@@ -119,12 +119,12 @@ void main() {
 
 	vec4 cameraVert = vec4(realVert, 1.f);
 	//projection code 
-	float q = Zfar/(Zfar - Znear);
+	float q = Zfar / (Zfar - Znear);
 
-	float f = -1 / (tan(fov / 2));
+	float f = 1 / (tan(fov / 2));
 
 	mat4 projectionMatrix;
-	
+
 	projectionMatrix[0] = vec4(f * aspectRatio, 0, 0, 0);
 	projectionMatrix[1] = vec4(0, f, 0, 0);
 	projectionMatrix[2] = vec4(0, 0, q, -q * Znear);
@@ -134,7 +134,7 @@ void main() {
 
 
 	gl_Position = result;
-//	vertex_color = vertex_colour;
+	//	vertex_color = vertex_colour;
 
 	texDir = normalize(vertex_position.xyz);
 
@@ -160,18 +160,20 @@ uniform vec3 lightColour;
 uniform samplerCube samp;
 
 void main() {
-	
+
 	vec3 final = texture(samp, texDir).xyz;
 
 	//ambient light
-	float ambientStrength = .1f;
+	float ambientStrength = .0f;
+
+	final *= ambientStrength;
 
 	//diffuse light
 	vec3 lightDir = normalize(lightPos - fragPos);
-	float diffuseStrength = max(dot(lightDir, Normal), 0.f);
+	float diffuseStrength = max(dot(lightDir, Normal), 0.f) * 0.5f;
 
 
-	//final += (ambientStrength + diffuseStrength) * lightColour;
+	final += diffuseStrength * lightColour;
 
 	out_colour = vec4(final, 1);
 	//out_colour += vec4(vertex_color, 1.f);

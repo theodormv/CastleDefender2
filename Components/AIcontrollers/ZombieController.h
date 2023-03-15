@@ -8,19 +8,19 @@ namespace Components {
 	namespace Controllers {
 		class Zombie : public Component {
 
-			Velocity* vel;
 			Entity* playerTarget;
 
 		public:
 			Zombie();
 			Zombie(Entity* target);
+			~Zombie();
 
 			void update() override;
 			void init() override;
 			
 
 
-
+			static uint16 killed;
 		};
 
 	}

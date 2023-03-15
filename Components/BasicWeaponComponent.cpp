@@ -41,7 +41,7 @@ namespace Components {
 		Game::EntityAddComponent<Components::Position>(shot, spawnPos);
 		Game::EntityAddComponent<Components::Facing>(shot, facing);
 		Game::EntityAddComponent<Components::Projectile>(shot, weapon->damage, weapon->lifetime);
-		Game::EntityAddComponent<Components::Velocity>(shot, owner->getComponent<Components::Velocity>()->getVel() + facing*50);
+		Game::EntityAddComponent<Components::Velocity>(shot, facing*weapon->speed);
 		Game::EntityAddComponent<Components::Hitbox>(shot, weapon->projectileSize, weapon->projectileSize, weapon->projectileSize);
 		Game::EntityAddComponent<Components::Model>(shot, weapon->projectileModel);
 	}

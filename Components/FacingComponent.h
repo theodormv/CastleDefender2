@@ -28,5 +28,8 @@ namespace Components {
 		void rotateXZ(float rad);
 		void rotateYZ(float rad);
 
+		inline void setXZ(float rad) {
+			XZ = rad;
+		}
 	};
 }

@@ -30,7 +30,7 @@ namespace Components {
 			yz = fac->getYZ();
 		}
 		
-		activeCam->Draw(*model, worldPos->getPos(), yz, -xz, 0);
+		activeCam->Draw(*model, worldPos->getPos(), yz, xz, 0);
 	}
 
 	void Model::init() {

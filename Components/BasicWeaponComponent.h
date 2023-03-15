@@ -10,6 +10,7 @@ typedef struct {
 	float rateOfFire;
 	Model* projectileModel;
 	int projectileSize;
+	float speed;
 } Weapon;
 
 

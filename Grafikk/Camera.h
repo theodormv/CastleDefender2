@@ -23,9 +23,9 @@ public:
 
 	void Draw(Model& target, Vector3f position, float rotx, float roty, float rotz) override;
 
-	void Draw(Model& target, Vector3f position, float rotx, float roty, float rotz, const Vector3f& axRoll, const Vector3f& axPitch, const Vector3f& axYaw) override;
+	//void Draw(Model& target, Vector3f position, float rotx, float roty, float rotz, const Vector3f& axRoll, const Vector3f& axPitch, const Vector3f& axYaw) override;
 
-	void Draw(Wireframe& target, Vector3f position, float rotx, float roty, float rotz) override;
+	//void Draw(Wireframe& target, Vector3f position, float rotx, float roty, float rotz) override;
 
 	inline void rotatex(float rot) { rotx += rot; }
 	inline void rotatey(float rot) { roty += rot; }

@@ -8,14 +8,14 @@ BoxCore::BoxCore(float w, float h, float d) : width(w), height(h)
 	const float hh = h / 2.f;
 	const float hd = d / 2.f; 
 
-	points = { {  hw,  hh, -hd},    //front bottom left
-			   { -hw,  hh, -hd},    //front bottom right
-			   {  hw, -hh, -hd},    //front top left
-			   { -hw, -hh, -hd},    //front top right
-			   {  hw,  hh,  hd},    //back bottom left
-			   { -hw,  hh,  hd},	//back bottom right
-			   {  hw, -hh,  hd},	//back top left
-			   { -hw, -hh,  hd} };	//back top right
+	points = { {  hw,  -hh, -hd},    //front bottom left
+			   { -hw,  -hh, -hd},    //front bottom right
+			   {  hw,   hh, -hd},    //front top left
+			   { -hw,   hh, -hd},    //front top right
+			   {  hw,  -hh,  hd},    //back bottom left
+			   { -hw,  -hh,  hd},	//back bottom right
+			   {  hw,   hh,  hd},	//back top left
+			   { -hw,   hh,  hd} };	//back top right
 
 	inds = { 
 		//front face
@@ -67,6 +67,9 @@ Vector3f BoxCore::correctedIntersect(BoxCore* other) {
 
 	const Vector3f checkPoint = *center - *other->center;
 
+	//std::cout << "box center : " << *center << std::endl;
+
+
 	Vector3f opVec;
 	Vector3f retVec;
 
@@ -82,11 +85,28 @@ Vector3f BoxCore::correctedIntersect(BoxCore* other) {
 
 
 	if (x > -tWidth && x < tWidth) {
-		opVec.set(0, (tWidth - abs(x))*(x/(abs(x))));
+
+
+		float xcorr = (tWidth - abs(x)) * (x / (abs(x)));
+
+		opVec.set(0, (isnan(xcorr)) ? tWidth : xcorr);
+
+
+
 		if (y > -tHeight && y < tHeight) {
-			opVec.set(1, (tHeight - abs(y)) * (y / (abs(y))));
+
+			float ycorr = (tHeight - abs(y)) * (y / (abs(y)));
+
+			opVec.set(1, (isnan(ycorr)) ? tHeight : ycorr);
+
+
 			if (z > -tDepth && z < tDepth) {
-				opVec.set(2, (tDepth - abs(z)) * (z / (abs(z))));
+				float zcorr = (tDepth - abs(z)) * (z / (abs(z)));
+
+				opVec.set(2, (isnan(zcorr)) ? tDepth : zcorr);
+
+
+				//std::cout << "opvec : " << opVec << std::endl;
 
 				float min = abs(opVec.get(0));
 				int minind = 0;

@@ -57,6 +57,6 @@ void Primitive::LoadVertexNormalsFromTriangles(const Primitive::TRIANGLE* triang
 		for (int i_norm = 0; i_norm < planes[i_vert].size(); i_norm++) {
 			NormalSum += planes[i_vert][i_norm];
 		}
-		*(Vector3f*)&vertices[i_vert].normal = NormalSum/NormalSum.mag();
+		*(Vector3f*)&vertices[i_vert].normal = NormalSum/-NormalSum.mag();
 	}
 }

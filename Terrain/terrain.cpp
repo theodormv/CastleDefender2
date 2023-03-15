@@ -53,6 +53,13 @@ Terrain::~Terrain() {
 
 void Terrain::draw() const {
 
+	Game::activeCamera->program.Use();
+
+	Vector3f dims = reinterpret_cast<BoxCore*>(shape)->getFurthestPoint();
+
+	int dim_loc = glGetUniformLocation(Game::activeCamera->program.get(), "boxDims");
+	GlCall(glUniform3f(dim_loc, dims[0], dims[1], dims[2]));
+
 
 	Game::activeCamera->Draw(*model, reinterpret_cast<BoxCore*>(shape)->getCenter(), 0, 0, 0);
 

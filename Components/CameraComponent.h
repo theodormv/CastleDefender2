@@ -1,9 +1,9 @@
 #pragma once
 #include "../Component.h"
-#include "../Grafikk/Camera.h"
+#include "../Grafikk/nyttCamera.h"
 
 namespace Components {
-	class Camera : public Component, public ::Camera {
+	class Camera : public Component, public ::newCamera {
 		
 	public:
 		Camera();

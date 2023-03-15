@@ -32,7 +32,7 @@ namespace Components {
 
 		}
 
-		activeCam->Draw(*wireframe, worldPos->getPos(), yz, xz, 0);
+		//activeCam->Draw(*wireframe, worldPos->getPos(), yz, xz, 0);
 	}
 
 	void Wireframe::init() {

@@ -8,21 +8,19 @@ layout(location = 2) in vec2 vertex_texture;
 
 //out vec3 vertex_color;
 out vec3 Normal;
-out vec3 fragPos;
-out vec2 tex_coord;
+out vec4 fragPos;
+out vec3 texDir;
 
-uniform float fov;
-uniform float aspectRatio;
-uniform float Zfar;
-uniform float Znear;
+
 
 uniform vec3 modelRotation;
 uniform vec3 modelPosition;
 
-uniform vec3 positionRotation;
+uniform mat4 lookAtMat;
+uniform mat4 projection;
 
-uniform vec3 modelAxisPitch;
-uniform vec3 modelAxisYaw;
+//uniform vec3 modelAxisPitch;
+//uniform vec3 modelAxisYaw;
 //uniform vec3 modelAxisRoll;
 
 vec3 rotateVecAroundVecAx(in vec3 vec, in vec3 vecAx, in float theta) {
@@ -47,7 +45,6 @@ vec3 rotateVecAroundVecAx(in vec3 vec, in vec3 vecAx, in float theta) {
 	return a;
 }
 
-uniform vec3 cameraRotation;
 
 void setMatrixRotationX(in float rotation, out mat3 rotationMat) {
 	rotationMat[0] = vec3(1, 0, 0);
@@ -99,49 +96,24 @@ void main() {
 
 	//rotation code x y z plane
 
+	//transform model to world coordinates
+	vec4 verts = vec4((vertex_position.xyz * getRotationMatrix(modelRotation)) + modelPosition, 1.f);
 
 
 
-	mat3 rotationCamera = getRotationMatrix(cameraRotation);
-
-	mat3 rotationModel = getRotationMatrix(modelRotation);
-
-
-
-
-	vec3 vertex_positionN = vertex_position.xyz * rotationModel;
-	//vertex_positionN = rotateVecAroundVecAx(vertex_positionN, modelAxisRoll, modelRotation.z);
-
-	vec3 realVert = (vertex_positionN + modelPosition) * getRotationMatrix(0, positionRotation.y, 0);
-
-
-	realVert = rotateVecAroundVecAx(realVert, modelAxisPitch, positionRotation.x);
-
-	vec4 cameraVert = vec4(realVert, 1.f);
 	//projection code 
-	float q = Zfar / (Zfar - Znear);
-
-	float f = 1 / (tan(fov / 2));
-
-	mat4 projectionMatrix;
-
-	projectionMatrix[0] = vec4(f * aspectRatio, 0, 0, 0);
-	projectionMatrix[1] = vec4(0, f, 0, 0);
-	projectionMatrix[2] = vec4(0, 0, q, -q * Znear);
-	projectionMatrix[3] = vec4(0, 0, 1, 0);
-
-	vec4 result = cameraVert * projectionMatrix;
 
 
-	gl_Position = result;
+
+	gl_Position = projection * (lookAtMat * verts);
 	//	vertex_color = vertex_colour;
 
-	tex_coord = vertex_texture;
+	texDir = vec3(vertex_texture,0.f);
 
 	//used for lighting
-	Normal = vertex_normal; //* rotationModel;
-	Normal = Normal * rotationModel;
-	fragPos = realVert;
+	Normal = vertex_normal * getRotationMatrix(modelRotation); //* rotationModel;
+	//Normal = (vec4(Normal, 1.f)).xyz;
+	fragPos = lookAtMat * verts;
 }
 
 #shader fragment
@@ -149,8 +121,8 @@ void main() {
 
 //in vec3 vertex_color;
 in vec3 Normal;
-in vec3 fragPos;
-in vec2 tex_coord;
+in vec4 fragPos;
+in vec3 texDir;
 
 out vec4 out_colour;
 
@@ -161,17 +133,18 @@ uniform sampler2D samp;
 
 void main() {
 
-	vec3 final = texture(samp, tex_coord).xyz;
+	vec3 final = texture(samp, texDir.xy).xyz;
 
 	//ambient light
 	float ambientStrength = .1f;
 
+	final *= ambientStrength;
+
 	//diffuse light
-	vec3 lightDir = normalize(lightPos - fragPos);
-	float diffuseStrength = max(dot(lightDir, Normal), 0.f);
+	vec3 lightDir = normalize(lightPos - fragPos.xyz);
+	float diffuseStrength = max(dot(lightDir, Normal), 0.f) * 0.5f;
 
-
-	//final += (ambientStrength + diffuseStrength) * lightColour;
+	final += diffuseStrength * lightColour;
 
 	out_colour = vec4(final, 1);
 	//out_colour += vec4(vertex_color, 1.f);

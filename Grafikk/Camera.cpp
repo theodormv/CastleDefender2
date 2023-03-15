@@ -24,7 +24,8 @@ void Camera::Draw(Model& target, Vector3f in_position, float in_rotx, float in_r
 	GlCall(int axPitch_loc = glGetUniformLocation(program.get(), "modelAxisPitch"));
 
 	Vector3f pitchAx(1, 0, 0);
-	pitchAx = Vec3MulMat3(pitchAx, getRotationXZ(rotx));
+	pitchAx = Vec3MulMat3(pitchAx, getRotationXZ(roty));
+	std::cout << "Camera::draw" << pitchAx << rotx << " " << roty << std::endl;
 
 	GlCall(glUniform3f(axPitch_loc, pitchAx[0], pitchAx[1], pitchAx[2]));
 
@@ -34,7 +35,7 @@ void Camera::Draw(Model& target, Vector3f in_position, float in_rotx, float in_r
 }
 
 
-void Camera::Draw(Model& target, Vector3f in_position, float in_rotx, float in_roty, float in_rotz, const Vector3f& axRoll, const Vector3f& axPitch, const Vector3f& axYaw) {
+/*void Camera::Draw(Model& target, Vector3f in_position, float in_rotx, float in_roty, float in_rotz, const Vector3f& axRoll, const Vector3f& axPitch, const Vector3f& axYaw) {
 	Vector3f renderPos = in_position - position;
 	//std::cout << renderPos << std::endl;
 
@@ -69,7 +70,7 @@ void Camera::Draw(Model& target, Vector3f in_position, float in_rotx, float in_r
 	GlCall(int AxYaw_loc = glGetUniformLocation(program.get(), "modelAxisYaw"));
 	GlCall(glUniform3f(AxYaw_loc, AxisYaw.get(0), AxisYaw.get(1), AxisYaw.get(2)));
 
-	*/
+	
 	//std::cout << axRoll << AxisPitch << AxisYaw << std::endl;
 
 	Mat3 Mrotx = { 1, 0, 0,
@@ -119,7 +120,7 @@ void Camera::Draw(Wireframe& target, Vector3f in_position, float in_rotx, float 
 	GlCall(int AxYaw_loc = glGetUniformLocation(program.get(), "modelAxisYaw"));
 	GlCall(glUniform3f(AxYaw_loc, AxisYaw.get(0), AxisYaw.get(1), AxisYaw.get(2)));
 
-	*/
+	
 	//std::cout << axRoll << AxisPitch << AxisYaw << std::endl;
 
 	Mat3 Mrotx = { 1, 0, 0,
@@ -139,4 +140,4 @@ void Camera::Draw(Wireframe& target, Vector3f in_position, float in_rotx, float 
 	renderPos = Vec3MulMat3(renderPos, Mrotz);
 
 	target.Draw(renderPos, program.get());
-}
+}*/

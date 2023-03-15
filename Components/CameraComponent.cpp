@@ -7,20 +7,16 @@ namespace Components {
 	Camera::Camera() {}
 	
 	void Camera::init() {
-		update();
+		delete position;
+		position = &owner->getComponent<Components::Position>()->getPos();
+		Direction = owner->getComponent<Components::Facing>()->getVec();
 	}
 
 	void Camera::update() {
+		Direction = owner->getComponent<Components::Facing>()->getVec();
 
-		position = owner->getComponent<Position>()->getPos();
-
-		if (owner->hasComponent<Facing>()) {
-			Facing* fac = owner->getComponent<Facing>();
-
-			rotx = -fac->getYZ();
-			roty = -fac->getXZ();
-
-		}
+		//program.Use();
+		//setViewMatrix();
 	}
 
 

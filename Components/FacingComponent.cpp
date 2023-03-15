@@ -23,9 +23,9 @@ namespace Components {
 
 	void Facing::init() {}
 	void Facing::update() {
-		fac = Vector3f(0, 0, 1);
-		fac = Vec3MulMat3(fac, getRotationYZ(YZ));
-		fac = Vec3MulMat3(fac, getRotationXZ(-XZ));
+		fac[0] = cos(XZ) * cos(YZ);
+		fac[1] = sin(YZ);
+		fac[2] = sin(XZ) * cos(YZ);
 		//float yz = YZ;
 		//float xz = XZ;
 		//fac = Vector3f(cos(xz) * cos(yz), cos(xz) * sin(yz), sin(xz));
@@ -34,8 +34,6 @@ namespace Components {
 
 	void Facing::rotateXZ(float rad) {
 		XZ += rad;
-
-		fac = Vec3MulMat3(fac, getRotationXZ(rad));
 
 
 	}

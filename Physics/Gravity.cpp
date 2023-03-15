@@ -3,7 +3,7 @@
 namespace Game {
 	namespace Physics {
 
-		Vector3f gravity = Vector3f(0, 5, 0);
+		Vector3f gravity = Vector3f(0, -5, 0);
 
 	}
 }
