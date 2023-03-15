@@ -1,12 +1,12 @@
 #pragma once
-
+#include <iostream>
 class Entity;
 
 class Component {
 public:
 	Entity* owner;
 	Component() : owner(nullptr) {};
-	~Component() {};
+	virtual ~Component() {}
 
 
 	virtual void init() {};

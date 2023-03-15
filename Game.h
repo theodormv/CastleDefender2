@@ -6,6 +6,7 @@
 #include "Error.h"
 #include "ComponentWrapper.h"
 #include "Grafikk/Camera.h"
+#include "Grafikk/NyttCamera.h"
 #include "Grafikk/Shader.h"
 #include "Component.h"
 #include "Input/Controller.h"
@@ -63,7 +64,7 @@ namespace Game {
 		return *comp;
 	}
 
-
+	
 	bool removeComponent(Component* comp, uint16 type);
 
 	bool removeEntity(Entity* ent);

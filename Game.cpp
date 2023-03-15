@@ -124,30 +124,52 @@ namespace Game {
 
 				
 			}
-
+			//std::cout << "TERRAIN" << std::endl;
 			for (int j = 0; j < terrain.size(); ++j) {
 
 				Vector3f correction = terrain[j].getShape()->correctedIntersect(hitbox);
-
+				//std::cout << "Correction : " << correction << std::endl;
 				//std::cout << "Game::handle Collitions : " << correction << std::endl;
-
 				if (correction.get(1) && !(correction.get(0) && correction.get(2))) { //if only has a y-component check grounded
 
 					hitbox->owner->getComponent<Components::Velocity>()->getVel()[1] = 0;
-					if (correction.get(1) < 0) {
+					if (correction.get(1) > 0) {
 						hitbox->owner->setState(States::grounded);
 					}
 					
 				}
 
 				hitbox->owner->getComponent<Components::Position>()->getPos() += correction;
+
+				if(correction.sqareMag() && hitbox->owner->hasComponent<Components::Projectile>()) {
+					hitbox->owner->pendingDeletion = true;
+				}
+			}
+			//std::cout << std::endl;
+		}
+	}
+
+	bool removeComponent(Component* comp, uint16 type) {
+		std::vector<CompWrapper>& comps = components[type];
+
+		int16 index = -1;
+
+		for (int i = 0; i < comps.size(); i++) {
+			if (comps[i].getCore() == comp) {
+				index = i;
+				break;
 			}
 		}
+		//std::cout << "Game::removeComponent : "<< index << std::endl;
+		if (index == -1) return false;
+
+		delete comp;
+		comps[index].getCore() = nullptr;
+		return true;
 	}
 
 	bool removeEntity(Entity* ent) {
 		std::array<Component*, compNum>  comps = ent->getComponents();
-
 
 		int index = -1;
 		for (int i = 0; i < entities.size(); ++i) {
@@ -163,30 +185,14 @@ namespace Game {
 		
 		for (int i = 0; i < comps.size(); ++i) {
 			if (comps[i]) {
+
 				removeComponent(comps[i], i);
 			}
 		}
-		std::cout << "Removed entity : " << ent << std::endl;
+		//std::cout << "Removed entity : " << ent << std::endl;
 		return true;
 	}
 
-	bool removeComponent(Component* comp, uint16 type) {
-		std::vector<CompWrapper>& comps = components[type];
-
-		int16 index = -1;
-
-		for (int i = 0; i < comps.size(); i++) {
-			if (comps[i].getCore() == comp) {
-				index = i;
-				break;
-			}
-		}
-		if (index == -1) return false;
-
-		delete comp;
-		comps[index].getCore() = nullptr;
-		return true;
-	}
 
 
 	void handleStates() {
@@ -211,7 +217,7 @@ namespace Game {
 
 					Hitbox checkBox(*ent->getComponent<Hitbox>());
 
-					checkBox.move(Physics::gravity.getNorm()*0.01);
+					checkBox.move(Physics::gravity.getNorm()*0.05);
 
 
 					for (int t = 0; t < terrain.size(); ++t) {
@@ -229,7 +235,13 @@ namespace Game {
 				break;
 			}
 
-
+			if (entities[i]->hasComponent<Components::Position>()) {
+				if (entities[i]->getComponent<Components::Position>()->getPos()[1] < -100) {
+				
+					entities[i]->pendingDeletion = true;
+				
+				}
+			}
 		}
 	}
 
@@ -255,8 +267,12 @@ namespace Game {
 		std::vector<CompWrapper>& mods = components[getCompID<Components::Model>()];
 
 		for (int i = 0; i < mods.size(); ++i) {
-			if(mods[i].getCore())
+			if (mods[i].getCore())
+			{
 				mods[i]->update();
+				
+			}
+			
 		}
 	}
 	 
